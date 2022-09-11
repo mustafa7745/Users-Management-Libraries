@@ -35,7 +35,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
         // Set the data to the views here
         holder.id.setText(Integer.toString(user.getId()));
         holder.name.setText(user.getName());
-//        Glide.with(context).load(user.getImage()).into(holder.image);
+        Glide.with(context).load(user.getImage()).into(holder.image);
 
     }
 
