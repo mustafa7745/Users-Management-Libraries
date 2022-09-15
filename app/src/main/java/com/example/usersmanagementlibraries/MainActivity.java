@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         show = findViewById(R.id.show);
         add = findViewById(R.id.add);
+        edit = findViewById(R.id.edit);
 
         show.setOnClickListener(new View.OnClickListener() {
             @Override

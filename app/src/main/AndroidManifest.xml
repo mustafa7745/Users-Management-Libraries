@@ -13,6 +13,12 @@
             android:name=".PageEditUsers"
             android:exported="false" />
         <activity
+            android:name=".PageAddUsers"
+            android:exported="false" />
+        <activity
+            android:name=".PageReadUsers"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -37,6 +37,7 @@ public class ReadUsers {
         this.e_name = e_name;
         this.e_image = e_image;
         this.url = url;
+
     }
 
 

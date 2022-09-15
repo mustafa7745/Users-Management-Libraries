@@ -1,13 +1,19 @@
 package com.example.libraries;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,10 +25,18 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
     private  Context context;
     private static int customLayout,e_id,e_name,e_image;
 
+
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v= LayoutInflater.from(parent.getContext()).inflate(customLayout,parent,false);
+
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         UserViewHolder evh=new UserViewHolder(v);
         return evh;
     }
@@ -31,12 +45,10 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
 
         User user = usersLists.get(position);
-
         // Set the data to the views here
         holder.id.setText(Integer.toString(user.getId()));
         holder.name.setText(user.getName());
         Glide.with(context).load(user.getImage()).into(holder.image);
-
     }
 
     @Override
