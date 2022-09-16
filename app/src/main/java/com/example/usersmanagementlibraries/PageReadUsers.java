@@ -25,7 +25,7 @@ public class PageReadUsers extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_page_read_users);
         recyclerView=findViewById(R.id.recycler);
-        ReadUsers toaster=new ReadUsers(this,layoutManager,adapter,recyclerView,custom_layout_user ,textView_id , textView_name,imageView,url);
+        ReadUsers toaster=new ReadUsers(this,layoutManager,adapter,recyclerView,custom_layout_user ,textView_id,textView_name,imageView,url);
         toaster.readDataFromDatabase();
     }
 }

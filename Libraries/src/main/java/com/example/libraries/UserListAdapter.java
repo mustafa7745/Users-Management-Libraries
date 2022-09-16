@@ -1,22 +1,16 @@
 package com.example.libraries;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
+import com.example.dialoglibs.DialogInput;
 
 import java.util.ArrayList;
 
@@ -49,6 +43,26 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.UserVi
         holder.id.setText(Integer.toString(user.getId()));
         holder.name.setText(user.getName());
         Glide.with(context).load(user.getImage()).into(holder.image);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                DialogInput dialogInput=new DialogInput(context);
+                dialogInput.setTitle("User Information"+ Integer.toString(holder.getAdapterPosition()+1))
+                        .setFirstTextField("Username:",user.getName())
+                        .setSecondTextField("Email:",user.getEmail())
+                        .isEnabledFirstTextField(false)
+                        .isEnabledSecondTextField(false)
+                        .setIconString(user.getImage())
+                        .setSecondButtonText("OK")
+                        .withSecondButtonListner(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialogInput.dismiss();
+                            }
+                        }).show();
+            }
+        });
     }
 
     @Override

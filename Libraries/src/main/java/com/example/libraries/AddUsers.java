@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dialoglibs.DialogInput;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import org.json.JSONException;
@@ -30,21 +32,13 @@ import java.util.Map;
 public class AddUsers {
     private Context contextAddPage;
     private Activity activity;
-    private int layout_progress_dialog;
     private Class classMainPage;
-    private  ProgressDialog pdialog;
     private ImageView imgView;
 
-
-
-
-    public AddUsers( Class classMainPage,Context contextAddPage,Activity activity,ProgressDialog pdialog, int layout_progress_dialog,ImageView imgView) {
+    public AddUsers( Class classMainPage,Context contextAddPage,Activity activity,ImageView imgView) {
         this.classMainPage = classMainPage;
         this.contextAddPage = contextAddPage;
-
         this.activity=activity;
-        this.layout_progress_dialog = layout_progress_dialog;
-        this.pdialog=pdialog;
         this.imgView=imgView;
     }
 
@@ -56,6 +50,8 @@ public class AddUsers {
     }
 
     public void addDataToDatabase(String username, String email , String extension, String url) {
+        DialogInput dialogInput=new DialogInput(contextAddPage);
+        dialogInput.setProgressbar(View.VISIBLE).show();
         // creating a new variable for our request queue
         RequestQueue queue = Volley.newRequestQueue(contextAddPage);
 
@@ -66,24 +62,27 @@ public class AddUsers {
             @Override
             public void onResponse(String response) {
 
-                Intent intent=new Intent(contextAddPage,classMainPage);
-                activity.startActivity(intent);
-                pdialog.hide();
+
                 Log.e("TAG", "RESPONSE IS " + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     // on below line we are displaying a success toast message.
-                    Toast.makeText(contextAddPage, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                    dialogInput.setProgressbar(View.GONE).setSubtitle(jsonObject.getString("message")).image_success().setFirstButtonText("OK").withFirstButtonListner(view -> {
+                        Intent intent=new Intent(contextAddPage,classMainPage);
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }).show();
                 } catch (JSONException e) {
+                    dialogInput.setProgressbar(View.GONE).image_fail().setFirstButtonText("OK").withFirstButtonListner(view -> {dialogInput.dismiss();}).show();
                     e.printStackTrace();
                 }
             }
         }, new com.android.volley.Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                pdialog.hide();
+                dialogInput.setProgressbar(View.GONE).image_fail().setFirstButtonText("OK").withFirstButtonListner(view -> {dialogInput.dismiss();}).show();
                 // method to handle errors.
-                Toast.makeText(contextAddPage, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+
             }
         }) {
             @Override
@@ -114,14 +113,6 @@ public class AddUsers {
         queue.add(request);
     }
 
-    public void funProgressDialog(){
-        pdialog =new ProgressDialog(contextAddPage);
-        pdialog.show();
-        pdialog.setCancelable(false);
-        pdialog.setContentView(layout_progress_dialog);
-
-    }
-
     public void ImageChooser(){
         ImagePicker.with(activity)
                 .crop(1f, 1f)    			//Crop image(Optional), Check Customization for more option
@@ -129,5 +120,4 @@ public class AddUsers {
                 .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
                 .start();
     }
-
 }

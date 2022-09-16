@@ -35,7 +35,7 @@ public class PageAddUsers extends AppCompatActivity {
         uname=findViewById(R.id.editTextTextPersonName);
         uemail=findViewById(R.id.editTextTextPersonName2);
         upload=findViewById(R.id.uploaddata);
-        addUsers=new AddUsers(MainActivity.class,PageAddUsers.this,PageAddUsers.this,pDialog,R.layout.progress_dialog,userImage);
+        addUsers=new AddUsers(MainActivity.class,PageAddUsers.this,PageAddUsers.this,userImage);
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,7 +46,6 @@ public class PageAddUsers extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 upload.setEnabled(false);
-                addUsers.funProgressDialog();
                 addUsers.addDataToDatabase(uname.getText().toString(),uemail.getText().toString(),ext,url);
             }
         });

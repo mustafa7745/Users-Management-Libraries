@@ -35,4 +35,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation 'com.github.mejdi14:Flat-Dialog-Android:1.0.5'
+    implementation 'com.github.mustafa7745:DialogsLibrary:1.0.2'
 }

@@ -1,7 +1,10 @@
 package com.example.libraries;
 import android.content.Context;
+import android.content.Intent;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.dialoglibs.DialogInput;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +31,7 @@ public class ReadUsers {
     private   int customLayout,e_id,e_name,e_image;
     private   String url;
 
+
     public ReadUsers(Context context, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter, RecyclerView recyclerView, int customLayout, int e_id, int e_name, int e_image, String url) {
         this.context = context;
         this.layoutManager = layoutManager;
@@ -42,29 +47,31 @@ public class ReadUsers {
 
 
     public  void readDataFromDatabase() {
-
-        // creating a new variable for our request queue
+        DialogInput dialogInput=new DialogInput(context);
+        dialogInput.setProgressbar(View.VISIBLE).show();
         RequestQueue queue = Volley.newRequestQueue(context);
-
-        // on below line we are calling a string
-        // request method to post the data to our API
-        // in this we are calling a post method.
         StringRequest request = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-//                Log.e("TAG", "RESPONSE IS " + response);
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     JSONArray jsonArray=jsonObject.getJSONArray("message");
                     ArrayList<User> userArrayList=new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        userArrayList.add(new User(jsonArray.getJSONObject(i).getString("username"),jsonArray.getJSONObject(i).getString("img"),Integer.parseInt(jsonArray.getJSONObject(i).getString("i_d"))));
+                        userArrayList.add(new User(
+                                jsonArray.getJSONObject(i).getString("username"),
+                                jsonArray.getJSONObject(i).getString("img"),
+                                jsonArray.getJSONObject(i).getString("email"),
+                                Integer.parseInt(jsonArray.getJSONObject(i).getString("i_d")))
+                                );
                     }
                     layoutManager=new LinearLayoutManager(context);
                     adapter =new UserListAdapter(userArrayList,context,customLayout,e_id,e_name,e_image);
                     recyclerView.setLayoutManager(layoutManager);
                     recyclerView.setAdapter(adapter);
+                    dialogInput.dismiss();
                 } catch (JSONException e) {
+                    dialogInput.setProgressbar(View.GONE).image_fail().setFirstButtonText("OK").withFirstButtonListner(view -> {dialogInput.dismiss();}).show();
                     e.printStackTrace();
                 }
             }
@@ -72,7 +79,8 @@ public class ReadUsers {
             @Override
             public void onErrorResponse(VolleyError error) {
                 // method to handle errors.
-                Toast.makeText(context, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+
+                dialogInput.setProgressbar(View.GONE).image_fail().setFirstButtonText("OK").withFirstButtonListner(view -> {dialogInput.dismiss();}).show();
             }
         }) {
             @Override
@@ -84,6 +92,7 @@ public class ReadUsers {
 
                 // on below line we are passing our
                 // key and value pair to our parameters.
+
                 return params;
             }
         };
